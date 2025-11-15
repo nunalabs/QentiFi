@@ -1,0 +1,56 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: MemeTokenFactory
+    network: ande-testnet
+    source:
+      address: "0x0000000000000000000000000000000000000000" # Replace with deployed address
+      abi: MemeTokenFactory
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - User
+        - Transaction
+      abis:
+        - name: MemeTokenFactory
+          file: ../contracts/out/MemeTokenFactory.sol/MemeTokenFactory.json
+        - name: BondingCurveAMM
+          file: ../contracts/out/BondingCurveAMM.sol/BondingCurveAMM.json
+        - name: MemeToken
+          file: ../contracts/out/MemeToken.sol/MemeToken.json
+      eventHandlers:
+        - event: TokenCreated(indexed address,indexed address,indexed address,string,string,string)
+          handler: handleTokenCreated
+        - event: TokenGraduated(indexed address,indexed address)
+          handler: handleTokenGraduated
+      file: ./src/mapping.ts
+
+templates:
+  - kind: ethereum/contract
+    name: BondingCurveAMM
+    network: ande-testnet
+    source:
+      abi: BondingCurveAMM
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Swap
+        - User
+      abis:
+        - name: BondingCurveAMM
+          file: ../contracts/out/BondingCurveAMM.sol/BondingCurveAMM.json
+      eventHandlers:
+        - event: TokensPurchased(indexed address,uint256,uint256,uint256)
+          handler: handleTokensPurchased
+        - event: TokensSold(indexed address,uint256,uint256,uint256)
+          handler: handleTokensSold
+      file: ./src/mapping.ts
