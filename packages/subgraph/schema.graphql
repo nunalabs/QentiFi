@@ -1,0 +1,88 @@
+type Token @entity {
+  id: ID! # Token address
+  name: String!
+  symbol: String!
+  imageURI: String!
+  creator: User!
+  bondingCurve: Bytes!
+  createdAt: BigInt!
+  graduated: Boolean!
+  graduatedAt: BigInt
+
+  # Trading stats
+  totalSupply: BigInt!
+  currentPrice: BigInt!
+  marketCap: BigInt!
+  volume24h: BigInt!
+  volumeTotal: BigInt!
+
+  # Holders
+  holderCount: Int!
+  holders: [TokenHolder!]! @derivedFrom(field: "token")
+
+  # Trading activity
+  swaps: [Swap!]! @derivedFrom(field: "token")
+
+  # Metadata
+  lastUpdate: BigInt!
+}
+
+type User @entity {
+  id: ID! # User address
+  tokensCreated: [Token!]! @derivedFrom(field: "creator")
+  swaps: [Swap!]! @derivedFrom(field: "user")
+  holdings: [TokenHolder!]! @derivedFrom(field: "holder")
+
+  # Stats
+  totalTokensCreated: Int!
+  totalSwaps: Int!
+  totalVolume: BigInt!
+  firstActivityAt: BigInt!
+  lastActivityAt: BigInt!
+}
+
+type TokenHolder @entity {
+  id: ID! # token-user
+  token: Token!
+  holder: User!
+  balance: BigInt!
+  firstPurchaseAt: BigInt!
+  lastActivityAt: BigInt!
+}
+
+type Swap @entity {
+  id: ID! # tx-logIndex
+  token: Token!
+  user: User!
+  type: SwapType!
+  amountIn: BigInt!
+  amountOut: BigInt!
+  price: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+}
+
+enum SwapType {
+  BUY
+  SELL
+}
+
+type DailyStats @entity {
+  id: ID! # date-YYYY-MM-DD
+  date: String!
+  tokensCreated: Int!
+  totalSwaps: Int!
+  totalVolume: BigInt!
+  uniqueUsers: Int!
+  timestamp: BigInt!
+}
+
+type GlobalStats @entity {
+  id: ID! # "global"
+  totalTokens: Int!
+  totalUsers: Int!
+  totalSwaps: Int!
+  totalVolume: BigInt!
+  totalValueLocked: BigInt!
+  lastUpdate: BigInt!
+}
