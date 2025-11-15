@@ -1,6 +1,6 @@
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { parseEther, formatEther } from 'viem'
-import { BONDING_CURVE_ABI } from '@/config/contracts'
+import { BONDING_CURVE_ABI } from '@/lib/contracts'
 
 export function useBondingCurve(bondingCurveAddress: string | undefined) {
   // Get current price

@@ -1,6 +1,6 @@
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { parseEther } from 'viem'
-import { FACTORY_ABI, FACTORY_ADDRESS } from '@/config/contracts'
+import { FACTORY_ABI, FACTORY_ADDRESS } from '@/lib/contracts'
 
 export function useCreateMemeToken() {
   const { writeContract, data: hash, isPending, error } = useWriteContract()

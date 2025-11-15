@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { useBondingCurve } from '@/hooks/useBondingCurve'
 import { useTokenStore } from '@/store/useTokenStore'
+import { PriceChart, usePriceData } from '@/components/PriceChart'
 
 export default function TokenDetailPage() {
   const params = useParams()
@@ -45,6 +46,8 @@ export default function TokenDetailPage() {
 
   const { currentPrice, currentSupply, totalVolume, buy, sell, isBuying, isSelling } =
     useBondingCurve(token.bondingCurve)
+
+  const { priceData, isLoading: isPriceLoading } = usePriceData(address)
 
   const handleTrade = async () => {
     if (!amount || !isConnected) return
@@ -122,7 +125,14 @@ export default function TokenDetailPage() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Trading Interface */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 space-y-8">
+              {/* Price Chart */}
+              <div className="bg-white rounded-xl shadow-lg p-8">
+                <h2 className="text-2xl font-bold text-qenti-dark mb-6">Price Chart</h2>
+                <PriceChart data={priceData} height={400} />
+              </div>
+
+              {/* Trading Form */}
               <div className="bg-white rounded-xl shadow-lg p-8">
                 <h2 className="text-2xl font-bold text-qenti-dark mb-6">Trade</h2>
 
